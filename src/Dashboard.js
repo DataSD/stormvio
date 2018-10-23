@@ -17,13 +17,29 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
-import Map from './Map';
 import Paper from '@material-ui/core/Paper';
 import {fromJS} from 'immutable';
 import {json as requestJson} from 'd3-request';
 
+import MapGL, {Marker, NavigationControl} from 'react-map-gl'
+
+//import logo from './logo.svg';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
+import {defaultMapStyle, dataLayer} from './map-style.js';
+
+
 
 const drawerWidth = 240;
+
+
+const navStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  padding: '10px'
+};
+
 
 const styles = theme => ({
   root: {
@@ -101,22 +117,72 @@ const styles = theme => ({
   },
 });
 
+const MAPBOX_TOKEN = 'pk.eyJ1IjoicXVhbmRhcnkiLCJhIjoiY2pndmVrcHU5MHJ4cTJxcDgwcjJubnBucyJ9.wRn-2fAYIED8VQDqo0M1CQ';
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       open: true,
-      mapData: null
+      mapStyle: defaultMapStyle,
+      mapData: null,
+      viewport: {
+        latitude: 32.7157,
+        longitude: -117.1611,
+        zoom: 12,
+        bearing: 0,
+        pitch: 0,
+        width: 900,
+        height: 500
+      }
     };
+
   }
 
   componentDidMount() {
+    window.addEventListener('resize', this._resize);
     requestJson('data/tsw_violations_merged.geojson', (error, response) => {
       if (!error) {
         this._loadData(response);
       }
     });
   }
+
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._resize);
+  }
+
+  _resize = () => {
+
+    /*this.setState({
+      viewport: {
+        ...this.state.viewport,
+        width: this.props.width || window.innerWidth,
+        height: this.props.height || window.innerHeight - 400
+      }
+    });*/
+  };
+
+
+
+  _loadData = data => {
+
+    //updatePercentiles(data, f => f.properties.income[this.state.year]);
+
+    const mapStyle = defaultMapStyle
+      // Add geojson source to map
+      .setIn(['sources', 'tsw_violations'], fromJS({type: 'geojson', data}))
+      // Add point layer to map
+      .set('layers', defaultMapStyle.get('layers').push(dataLayer));
+
+    this.setState({mapData: data, mapStyle});
+  };
+
+  _onViewportChange = viewport => this.setState({viewport});
+
+
+
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -126,12 +192,9 @@ class Dashboard extends React.Component {
     this.setState({ open: false });
   };
 
-  _loadData = data => {
-    this.setState({ mapData: data });
-  }
-
   render() {
     const { classes } = this.props;
+    const {viewport, mapStyle} = this.state;
 
     return (
       <React.Fragment>
@@ -182,7 +245,23 @@ class Dashboard extends React.Component {
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Typography component="div" className={classes.chartContainer}>
-            <Map mapData={this.state.mapData}/>
+
+            <Paper>
+              <MapGL
+                {...viewport}
+                ref={this.mapRef}
+                mapStyle={mapStyle}
+                onViewportChange={this._onViewportChange}
+                mapboxApiAccessToken={MAPBOX_TOKEN}
+                onClick={this._onClick}
+                onHover={this._onHover} className="main-map" >
+                  <div className="nav" style={navStyle}>
+                    <NavigationControl onViewportChange={this._updateViewport} />
+                  </div>
+              </MapGL>
+            </Paper>
+
+
             </Typography>
             <div className={classes.appBarSpacer} />
             <div className={classes.tableContainer}>

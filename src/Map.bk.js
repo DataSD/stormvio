@@ -39,7 +39,6 @@ export default class Map extends Component {
       }
     };
 
-    this.mapRef = React.createRef()
 
   }
 
@@ -52,12 +51,9 @@ export default class Map extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps);
-    console.log(this.props.mapData);
     if (this.state.mapData != this.props.mapData) {
       this._loadData(this.props.mapData);
     }
-
   }
 
   componentWillUnmount() {

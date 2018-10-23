@@ -1,8 +1,4 @@
-/*.App {
-  text-align: center;
-}
-
-.App-logo {
+/*.App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
 }
@@ -31,7 +27,7 @@
   }
 }*/
 
-body {
+/*body {
   margin: 0;
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -50,6 +46,14 @@ body {
   color: #6b6b76;
   text-transform: uppercase;
   outline: none;
+}*/
+
+.App {
+  min-height: 100vh;
+
+}
+
+nav.navbar {
 }
 
 label {
@@ -61,3 +65,16 @@ input {
   margin-left: 20px;
 }
 
+.info-container {
+  background: transparent;
+  left: 0px;
+  z-index: 999;
+  width: 100%;
+  height: 200px;
+}
+
+.map-container {
+}
+
+.main-map {
+}

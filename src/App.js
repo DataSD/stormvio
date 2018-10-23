@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MapGL, {Marker, NavigationControl} from 'react-map-gl'
+import Geocoder from 'react-map-gl-geocoder'
 import ControlPanel from './control-panel';
 
 //import logo from './logo.svg';
@@ -38,11 +39,9 @@ export default class App extends Component {
   constructor(props) {
     super (props);
     this.toggle = this.toggle.bind(this);
-    console.log(defaultMapStyle);
 
     this.state = {
       mapStyle: defaultMapStyle,
-      year: 2015,
       data: null,
       hoveredFeature: null,
       navbarOpen: false,
@@ -57,7 +56,11 @@ export default class App extends Component {
       }
     };
 
+    this.mapRef = React.createRef()
+
   }
+
+
 
   componentDidMount() {
     window.addEventListener('resize', this._resize);
@@ -79,18 +82,18 @@ export default class App extends Component {
   }
 
   _resize = () => {
+    console.log(window.innerWidth);
+    let finalHeight = window.innerHeight - window.navbarHeight;
     this.setState({
       viewport: {
         ...this.state.viewport,
         width: this.props.width || window.innerWidth,
-        height: this.props.height || window.innerHeight
+        height: this.props.height || window.innerHeight - 240
       }
     });
   };
 
   _loadData = data => {
-    console.log(data);
-    console.log(defaultMapStyle.get('layers'));
 
     //updatePercentiles(data, f => f.properties.income[this.state.year]);
 
@@ -103,27 +106,21 @@ export default class App extends Component {
     this.setState({data, mapStyle});
   };
 
-  _updateSettings = (name, value) => {
-    if (name === 'year') {
-      this.setState({year: value});
-
-      const {data, mapStyle} = this.state;
-      if (data) {
-        updatePercentiles(data, f => f.properties.income[value]);
-        const newMapStyle = mapStyle.setIn(['sources', 'incomeByState', 'data'], fromJS(data));
-        this.setState({mapStyle: newMapStyle});
-      }
-    }
-  };
-
   _onViewportChange = viewport => this.setState({viewport});
 
   _onHover = event => {
     const {features, srcEvent: {offsetX, offsetY}} = event;
-    const hoveredFeature = features && features.find(f => f.layer.id === 'data');
+    const hoveredFeature = features && features.find(f => f.layer.id === 'tsw_violations_style');
 
     this.setState({hoveredFeature, x: offsetX, y: offsetY});
   };
+
+  _onClick = event => {
+    console.log(event);
+
+    //const {features, srcEvent: {offsetX, offsetY}} = event;
+    //const clickedFeature = features && features.find(f => f.layer.id === 'data');
+  }
 
   _renderTooltip() {
     const {hoveredFeature, year, x, y} = this.state;
@@ -142,7 +139,7 @@ export default class App extends Component {
     const {viewport, mapStyle} = this.state;
 
     return (
-      <div>
+      <div className="App">
         <Navbar color="inverse" light expand="md">
           <NavbarBrand href="/">StormVio</NavbarBrand>
             <NavbarToggler onClick={this.toggle} />
@@ -158,23 +155,33 @@ export default class App extends Component {
             </Collapse>
         </Navbar>
 
+
+
+        <div className="map-container">
         <MapGL
           {...viewport}
+          ref={this.mapRef}
           mapStyle={mapStyle}
           onViewportChange={this._onViewportChange}
           mapboxApiAccessToken={MAPBOX_TOKEN}
-          onHover={this._onHover} >
+          onClick={this._onClick}
+          onHover={this._onHover} className="main-map" >
 
           {this._renderTooltip()}
 
 
+        <Geocoder mapRef={this.mapRef} onViewportChange={this._onViewportChange} mapboxApiAccessToken={MAPBOX_TOKEN} />
         <div className="nav" style={navStyle}>
           <NavigationControl onViewportChange={this._updateViewport} />
         </div>
 
-        <ControlPanel containerComponent={this.props.containerComponent}
-          settings={this.state} onChange={this._updateSettings} />
         </MapGL>
+      </div>
+
+        <div className="info-container">
+          hello
+        </div>
+
       </div>
     );
   }

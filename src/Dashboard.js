@@ -158,13 +158,13 @@ class Dashboard extends React.Component {
 
   _resize = () => {
 
-    /*this.setState({
+    this.setState({
       viewport: {
         ...this.state.viewport,
         width: this.props.width || window.innerWidth,
         height: this.props.height || window.innerHeight - 400
       }
-    });*/
+    });
   };
 
 
@@ -186,7 +186,8 @@ class Dashboard extends React.Component {
     let map = this.mapRef.current.getMap()
     let bounds = map.getBounds()
     let p_bounds = [map.project(bounds['_sw']), map.project(bounds['_ne'])]
-    let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['tsw_violations_style']});
+    // TODO -- slicing features down
+    let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['tsw_violations_style']}).slice(0, 10);
     console.log(visibleViolations);
     this.setState({viewport, visibleViolations});
   }
@@ -204,7 +205,7 @@ class Dashboard extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const {viewport, mapStyle} = this.state;
+    const {viewport, mapStyle, visibleViolations} = this.state;
 
     return (
       <React.Fragment>
@@ -275,7 +276,7 @@ class Dashboard extends React.Component {
             </Typography>
             <div className={classes.appBarSpacer} />
             <div className={classes.tableContainer}>
-              <ControlledExpansionPanel/>
+              <ControlledExpansionPanel mapData={visibleViolations}/>
             </div>
           </main>
         </div>

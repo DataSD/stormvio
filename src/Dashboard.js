@@ -16,7 +16,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import SimpleLineChart from './SimpleLineChart';
-import SimpleTable from './SimpleTable';
+import ControlledExpansionPanel from './ControlledExpansionPanel';
 import Paper from '@material-ui/core/Paper';
 import {fromJS} from 'immutable';
 import {json as requestJson} from 'd3-request';
@@ -126,6 +126,7 @@ class Dashboard extends React.Component {
       open: true,
       mapStyle: defaultMapStyle,
       mapData: null,
+      visibleViolations: null,
       viewport: {
         latitude: 32.7157,
         longitude: -117.1611,
@@ -136,6 +137,8 @@ class Dashboard extends React.Component {
         height: 500
       }
     };
+
+    this.mapRef = React.createRef();
 
   }
 
@@ -179,7 +182,14 @@ class Dashboard extends React.Component {
     this.setState({mapData: data, mapStyle});
   };
 
-  _onViewportChange = viewport => this.setState({viewport});
+  _onViewportChange = viewport => {
+    let map = this.mapRef.current.getMap()
+    let bounds = map.getBounds()
+    let p_bounds = [map.project(bounds['_sw']), map.project(bounds['_ne'])]
+    let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['tsw_violations_style']});
+    console.log(visibleViolations);
+    this.setState({viewport, visibleViolations});
+  }
 
 
 
@@ -265,7 +275,7 @@ class Dashboard extends React.Component {
             </Typography>
             <div className={classes.appBarSpacer} />
             <div className={classes.tableContainer}>
-              <SimpleTable />
+              <ControlledExpansionPanel/>
             </div>
           </main>
         </div>

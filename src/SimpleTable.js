@@ -32,6 +32,7 @@ const data = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
+
 function SimpleTable(props) {
   const { classes } = props;
 

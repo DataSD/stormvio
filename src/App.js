@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import MapGL, {Marker, NavigationControl} from 'react-map-gl'
-import Geocoder from 'react-map-gl-geocoder'
 
 //import logo from './logo.svg';
 import './App.css';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 import {defaultMapStyle, dataLayer} from './map-style.js';
 import {updatePercentiles} from './utils';

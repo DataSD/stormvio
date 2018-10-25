@@ -45,11 +45,10 @@ class ControlledExpansionPanels extends React.Component {
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>{ violation.properties.TYPE} </Typography>
             <Typography className={classes.secondaryHeading}>{ violation.properties.STATUS }</Typography>
-            <Typography className={classes.secondaryHeading}>{ violation.properties.APN}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Typography>
-              { violation.properties.type }
+              { violation.properties.PARCEL_APN }
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>

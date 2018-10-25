@@ -133,8 +133,8 @@ class Dashboard extends React.Component {
         zoom: 12,
         bearing: 0,
         pitch: 0,
-        width: 900,
-        height: 500
+        width: '100%',
+        height: '100vh'
       }
     };
 
@@ -158,13 +158,13 @@ class Dashboard extends React.Component {
 
   _resize = () => {
 
-    this.setState({
+    /*this.setState({
       viewport: {
         ...this.state.viewport,
         width: this.props.width || window.innerWidth,
         height: this.props.height || window.innerHeight - 400
       }
-    });
+    });*/
   };
 
 

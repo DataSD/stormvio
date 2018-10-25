@@ -112,6 +112,9 @@ const styles = theme => ({
   tableContainer: {
     height: 320,
   },
+  mapContainer: {
+    width: '100%',
+  },
   h5: {
     marginBottom: theme.spacing.unit * 2,
   },
@@ -145,6 +148,7 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     window.addEventListener('resize', this._resize);
+    this._resize();
     requestJson('data/tsw_violations_merged.geojson', (error, response) => {
       if (!error) {
         this._loadData(response);
@@ -159,14 +163,16 @@ class Dashboard extends React.Component {
 
   _resize = () => {
 
-    console.log(this.mapContainer.current.clientHeight);
-    console.log(this.mapContainer.current.refs);
+    console.log(this.mapContainer.current.clientWidth);
+    console.log(this.mapContainer.current);
 
     this.setState({
       viewport: {
         ...this.state.viewport,
-        width: this.props.width || window.innerWidth - 300,
-        height: this.props.height || window.innerHeight,
+        //width: this.props.width || window.innerWidth - 300,
+        //height: this.props.height || window.innerHeight,
+        width: this.props.width || this.mapContainer.current.clientWidth,
+        height: this.props.height || this.mapContainer.current.clientHeight
       }
     });
   };
@@ -261,7 +267,8 @@ class Dashboard extends React.Component {
             <div className={classes.appBarSpacer} />
             <Typography component="div" className={classes.chartContainer}>
 
-            <Paper ref={this.mapContainer}>
+            <Paper>
+              <div className={classes.mapContainer} ref={this.mapContainer}>
               <MapGL
                 {...viewport}
                 ref={this.mapRef}
@@ -274,6 +281,7 @@ class Dashboard extends React.Component {
                     <NavigationControl onViewportChange={this._updateViewport} />
                   </div>
               </MapGL>
+              </div>
             </Paper>
 
 

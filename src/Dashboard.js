@@ -31,7 +31,7 @@ import MatGeocoder from 'react-mui-mapbox-geocoder'
 //import logo from './logo.svg';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import {defaultMapStyle, dataLayer} from './map-style.js';
+import {defaultMapStyle, clusterLayer, clusterCountLayer, unclusteredPointLayer} from './map-style.js';
 
 
 
@@ -187,12 +187,6 @@ class Dashboard extends React.Component {
   }
 
   _resize = debounce(() => {
-    console.log('re');
-
-    console.log(this.mapContainer.current.clientWidth);
-    console.log(this.mapContainer.current.clientHeight);
-    console.log(this.mapContainer.current);
-
     this.setState({
       viewport: {
         ...this.state.viewport,
@@ -210,23 +204,31 @@ class Dashboard extends React.Component {
 
     //updatePercentiles(data, f => f.properties.income[this.state.year]);
 
+    let source = fromJS({
+        type: 'geojson',
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50,
+        data
+    })
     const mapStyle = defaultMapStyle
       // Add geojson source to map
-      .setIn(['sources', 'tsw_violations'], fromJS({type: 'geojson', data}))
+      .setIn(['sources', 'tsw_violations'], source)
       // Add point layer to map
-      .set('layers', defaultMapStyle.get('layers').push(dataLayer));
+      .set('layers', defaultMapStyle.get('layers').push(clusterLayer).push(unclusteredPointLayer).push(clusterCountLayer))
+
+    console.log(mapStyle);
 
     this.setState({mapData: data, mapStyle});
     this._getVisibleViolations();
   };
 
   _getVisibleViolations = debounce(() => {
-    console.log('GVV');
     let map = this.mapRef.current.getMap()
     let bounds = map.getBounds()
     let p_bounds = [map.project(bounds['_sw']), map.project(bounds['_ne'])]
     // TODO -- slicing features down
-    let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['tsw_violations_style']}).slice(0, 10);
+    let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['unclustered-point']}).slice(0, 10);
     this.setState({visibleViolations});
   }, 1000);
 
@@ -237,7 +239,6 @@ class Dashboard extends React.Component {
 
   _goToGeocoderResult = (result) => {
     // Go to result.
-    console.log(result);
 
     this.setState({
       viewport: {

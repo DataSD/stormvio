@@ -34,7 +34,6 @@ class ControlledExpansionPanels extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const classes = this.props.classes;
     let mapData = (this.props.mapData === null ? [] : this.props.mapData);
     const { expanded } = this.state;

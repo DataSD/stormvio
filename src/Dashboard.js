@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import GpsFixed from '@material-ui/icons/GpsFixed';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import SimpleLineChart from './SimpleLineChart';
@@ -246,6 +247,23 @@ class Dashboard extends React.Component {
     });
   }
 
+  locateUser = () => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
+    navigator.geolocation.getCurrentPosition(position => {
+
+      this.setState({
+        viewport: {
+          ...this.state.viewport,
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+          zoom: 17,
+          transitionDuration:1000,
+          transitionInterpolator: new FlyToInterpolator()
+        }
+      });
+    });
+  }
+
 
 
 
@@ -319,6 +337,11 @@ class Dashboard extends React.Component {
               showLoader={true}
               {...geocoderApiOptions}
             />
+
+            <IconButton onClick={this.handleDrawerClose}>
+              <GpsFixed onClick={this.locateUser}/>
+            </IconButton>
+
             <div className={classes.appBarSpacer} />
               <div className={classes.mapContainer} ref={this.mapContainer}>
               <MapGL

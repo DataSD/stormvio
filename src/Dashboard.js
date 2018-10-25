@@ -21,6 +21,8 @@ import Paper from '@material-ui/core/Paper';
 import {fromJS} from 'immutable';
 import {json as requestJson} from 'd3-request';
 
+import debounce from 'lodash/debounce';
+
 import MapGL, {Marker, NavigationControl, FlyToInterpolator, LinearInterpolator} from 'react-map-gl'
 import MatGeocoder from 'react-mui-mapbox-geocoder'
 
@@ -109,20 +111,25 @@ const styles = theme => ({
       width: theme.spacing.unit * 9,
     },
   },
-  appBarSpacer: theme.mixins.toolbar,
+  appBarSpacer: {
+    height: '1vh'
+  },
+  topAppBarSpacer: {
+    height: '7vh'
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
     height: '100vh',
     overflow: 'auto',
   },
-  chartContainer: {
-  },
   tableContainer: {
-    height: 320,
+    height: '40vh',
+    overflow: 'auto',
   },
   mapContainer: {
     width: '100%',
+    height: '35vh',
   },
   h5: {
     marginBottom: theme.spacing.unit * 2,
@@ -146,7 +153,7 @@ class Dashboard extends React.Component {
         bearing: 0,
         pitch: 0,
         width: window.innerWidth - 300,
-        height: window.innerHeight
+        height: window.innerHeight - 400,
       }
     };
 
@@ -170,7 +177,8 @@ class Dashboard extends React.Component {
     window.removeEventListener('resize', this._resize);
   }
 
-  _resize = () => {
+  _resize = debounce(() => {
+    console.log('re');
 
     console.log(this.mapContainer.current.clientWidth);
     console.log(this.mapContainer.current.clientHeight);
@@ -185,7 +193,7 @@ class Dashboard extends React.Component {
         height: this.mapContainer.current.clientHeight
       }
     });
-  };
+  }, 500);
 
 
 
@@ -200,17 +208,22 @@ class Dashboard extends React.Component {
       .set('layers', defaultMapStyle.get('layers').push(dataLayer));
 
     this.setState({mapData: data, mapStyle});
+    this._getVisibleViolations();
   };
 
-  _onViewportChange = viewport => {
-    console.log('VPC');
+  _getVisibleViolations = debounce(() => {
+    console.log('GVV');
     let map = this.mapRef.current.getMap()
     let bounds = map.getBounds()
     let p_bounds = [map.project(bounds['_sw']), map.project(bounds['_ne'])]
     // TODO -- slicing features down
     let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['tsw_violations_style']}).slice(0, 10);
-    console.log(visibleViolations);
-    this.setState({viewport, visibleViolations});
+    this.setState({visibleViolations});
+  }, 1000);
+
+  _onViewportChange = viewport => {
+    this._getVisibleViolations();
+    this.setState({viewport});
   }
 
   _goToGeocoderResult = (result) => {
@@ -238,10 +251,12 @@ class Dashboard extends React.Component {
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
+    this._resize();
   };
 
   handleDrawerClose = () => {
     this.setState({ open: false });
+    this._resize();
   };
 
   render() {
@@ -295,10 +310,8 @@ class Dashboard extends React.Component {
             <List>{mainListItems}</List>
           </Drawer>
           <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            <Typography component="div" className={classes.chartContainer}>
+            <div className={classes.topAppBarSpacer} />
 
-          <Paper>
             <MatGeocoder
               inputPlaceholder="Search Address"
               accessToken={MAPBOX_TOKEN}
@@ -306,9 +319,7 @@ class Dashboard extends React.Component {
               showLoader={true}
               {...geocoderApiOptions}
             />
-          </Paper>
-
-            <Paper>
+            <div className={classes.appBarSpacer} />
               <div className={classes.mapContainer} ref={this.mapContainer}>
               <MapGL
                 {...viewport}
@@ -323,10 +334,7 @@ class Dashboard extends React.Component {
                   </div>
               </MapGL>
               </div>
-            </Paper>
 
-
-            </Typography>
             <div className={classes.appBarSpacer} />
             <div className={classes.tableContainer}>
               <ControlledExpansionPanel mapData={visibleViolations}/>

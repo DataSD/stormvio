@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
+import Grid from '@material-ui/core/Grid';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import GpsFixed from '@material-ui/icons/GpsFixed';
@@ -135,6 +136,13 @@ const styles = theme => ({
   h5: {
     marginBottom: theme.spacing.unit * 2,
   },
+  locateButton: {
+    textAlign: 'center',
+    paddingTop: 8,
+    paddingBottom: 8
+  },
+  geocoderInput: {
+  }
 });
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoicXVhbmRhcnkiLCJhIjoiY2pndmVrcHU5MHJ4cTJxcDgwcjJubnBucyJ9.wRn-2fAYIED8VQDqo0M1CQ';
@@ -328,40 +336,70 @@ class Dashboard extends React.Component {
             <List>{mainListItems}</List>
           </Drawer>
           <main className={classes.content}>
-            <div className={classes.topAppBarSpacer} />
+            <Grid container spacing={24}>
+              <Grid item xs={12}>
+                <div className={classes.topAppBarSpacer} />
+              </Grid>
 
-            <MatGeocoder
-              inputPlaceholder="Search Address"
-              accessToken={MAPBOX_TOKEN}
-              onSelect={result => this._goToGeocoderResult(result)}
-              showLoader={true}
-              {...geocoderApiOptions}
-            />
 
-            <IconButton onClick={this.handleDrawerClose}>
-              <GpsFixed onClick={this.locateUser}/>
-            </IconButton>
+              <Grid item xs={12} sm={3} md={2}>
+                <Paper>
+                <div className={classes.locateButton} >
+                  <IconButton onClick={this.handleDrawerClose}>
+                    <GpsFixed onClick={this.locateUser}/>
+                  </IconButton>
+                </div>
+                </Paper>
+              </Grid>
 
-            <div className={classes.appBarSpacer} />
-              <div className={classes.mapContainer} ref={this.mapContainer}>
-              <MapGL
-                {...viewport}
-                ref={this.mapRef}
-                mapStyle={mapStyle}
-                onViewportChange={this._onViewportChange}
-                mapboxApiAccessToken={MAPBOX_TOKEN}
-                onClick={this._onClick}
-                onHover={this._onHover} className="main-map" >
-                  <div className="nav" style={navStyle}>
-                    <NavigationControl onViewportChange={this._updateViewport} />
+
+              <Grid item xs={12} sm={9} md={10}>
+                <div className={classes.geocoderInput} >
+                  <MatGeocoder
+                    inputPlaceholder="Search Address"
+                    accessToken={MAPBOX_TOKEN}
+                    onSelect={result => this._goToGeocoderResult(result)}
+                    showLoader={true}
+                    {...geocoderApiOptions}
+                  />
+                </div>
+              </Grid>
+
+              <Grid item xs={12}>
+                <div className={classes.appBarSpacer} />
+              </Grid>
+
+
+              <Grid item xs={12}>
+                <Paper>
+                  <div className={classes.mapContainer} ref={this.mapContainer}>
+                    <MapGL
+                      {...viewport}
+                      ref={this.mapRef}
+                      mapStyle={mapStyle}
+                      onViewportChange={this._onViewportChange}
+                      mapboxApiAccessToken={MAPBOX_TOKEN}
+                      onClick={this._onClick}
+                      onHover={this._onHover} className="main-map" >
+                        <div className="nav" style={navStyle}>
+                          <NavigationControl onViewportChange={this._updateViewport} />
+                        </div>
+                    </MapGL>
                   </div>
-              </MapGL>
-              </div>
+                </Paper>
+              </Grid>
 
-            <div className={classes.appBarSpacer} />
-            <div className={classes.tableContainer}>
-              <ControlledExpansionPanel mapData={visibleViolations}/>
-            </div>
+
+
+              <Grid item xs={12}> <div className={classes.appBarSpacer} /></Grid>
+              <Grid item xs={12}>
+                <Paper>
+                  <div className={classes.tableContainer}>
+                    <ControlledExpansionPanel mapData={visibleViolations}/>
+                  </div>
+                </Paper>
+              </Grid>
+          </Grid>
           </main>
         </div>
       </React.Fragment>

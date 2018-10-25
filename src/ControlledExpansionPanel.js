@@ -38,22 +38,24 @@ class ControlledExpansionPanels extends React.Component {
     const classes = this.props.classes;
     let mapData = (this.props.mapData === null ? [] : this.props.mapData);
     const { expanded } = this.state;
+    let listItems = <Typography className={classes.heading}>No Violations Visible</Typography>
 
+    if (mapData.length > 0) {
+      listItems = mapData.map((violation) =>
+          <ExpansionPanel key={violation.properties.UUID} expanded={expanded === violation.properties.UUID} onChange={this.handleChange(violation.properties.UUID)}>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>{ violation.properties.TYPE} </Typography>
+              <Typography className={classes.secondaryHeading}>{ violation.properties.STATUS }</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+                { violation.properties.PARCEL_APN }
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+      );
 
-    const listItems = mapData.map((violation) =>
-        <ExpansionPanel key={violation.properties.UUID} expanded={expanded === violation.properties.UUID} onChange={this.handleChange(violation.properties.UUID)}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>{ violation.properties.TYPE} </Typography>
-            <Typography className={classes.secondaryHeading}>{ violation.properties.STATUS }</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              { violation.properties.PARCEL_APN }
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-    );
-
+    }
 
 
 

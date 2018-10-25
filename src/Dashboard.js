@@ -21,7 +21,8 @@ import Paper from '@material-ui/core/Paper';
 import {fromJS} from 'immutable';
 import {json as requestJson} from 'd3-request';
 
-import MapGL, {Marker, NavigationControl} from 'react-map-gl'
+import MapGL, {Marker, NavigationControl, FlyToInterpolator, LinearInterpolator} from 'react-map-gl'
+import MatGeocoder from 'react-mui-mapbox-geocoder'
 
 //import logo from './logo.svg';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -39,6 +40,14 @@ const navStyle = {
   left: 0,
   padding: '10px'
 };
+
+
+const geocoderApiOptions = {
+    country: 'us',
+    proximity: {longitude: -117.1611, latitude: 32.7157},
+    bbox: [-117.321899, 32.507488, -116.798203, 33.114231]
+  }
+
 
 
 const styles = theme => ({
@@ -164,6 +173,7 @@ class Dashboard extends React.Component {
   _resize = () => {
 
     console.log(this.mapContainer.current.clientWidth);
+    console.log(this.mapContainer.current.clientHeight);
     console.log(this.mapContainer.current);
 
     this.setState({
@@ -171,8 +181,8 @@ class Dashboard extends React.Component {
         ...this.state.viewport,
         //width: this.props.width || window.innerWidth - 300,
         //height: this.props.height || window.innerHeight,
-        width: this.props.width || this.mapContainer.current.clientWidth,
-        height: this.props.height || this.mapContainer.current.clientHeight
+        width: this.mapContainer.current.clientWidth,
+        height: this.mapContainer.current.clientHeight
       }
     });
   };
@@ -193,6 +203,7 @@ class Dashboard extends React.Component {
   };
 
   _onViewportChange = viewport => {
+    console.log('VPC');
     let map = this.mapRef.current.getMap()
     let bounds = map.getBounds()
     let p_bounds = [map.project(bounds['_sw']), map.project(bounds['_ne'])]
@@ -200,6 +211,26 @@ class Dashboard extends React.Component {
     let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['tsw_violations_style']}).slice(0, 10);
     console.log(visibleViolations);
     this.setState({viewport, visibleViolations});
+  }
+
+  _goToGeocoderResult = (result) => {
+    // Go to result.
+    console.log(result);
+
+    this.setState({
+      viewport: {
+        ...this.state.viewport,
+        //width: this.props.width || window.innerWidth - 300,
+        //height: this.props.height || window.innerHeight,
+        width: this.mapContainer.current.clientWidth,
+        height: this.mapContainer.current.clientHeight,
+        longitude: result.center[0],
+        latitude: result.center[1],
+        zoom: 17,
+        transitionDuration:1000,
+        transitionInterpolator: new FlyToInterpolator()
+      }
+    });
   }
 
 
@@ -266,6 +297,16 @@ class Dashboard extends React.Component {
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Typography component="div" className={classes.chartContainer}>
+
+          <Paper>
+            <MatGeocoder
+              inputPlaceholder="Search Address"
+              accessToken={MAPBOX_TOKEN}
+              onSelect={result => this._goToGeocoderResult(result)}
+              showLoader={true}
+              {...geocoderApiOptions}
+            />
+          </Paper>
 
             <Paper>
               <div className={classes.mapContainer} ref={this.mapContainer}>

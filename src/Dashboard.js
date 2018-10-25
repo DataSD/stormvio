@@ -133,12 +133,13 @@ class Dashboard extends React.Component {
         zoom: 12,
         bearing: 0,
         pitch: 0,
-        width: '100%',
-        height: '100vh'
+        width: 900,
+        height: 900
       }
     };
 
     this.mapRef = React.createRef();
+    this.mapContainer = React.createRef();
 
   }
 
@@ -158,13 +159,16 @@ class Dashboard extends React.Component {
 
   _resize = () => {
 
-    /*this.setState({
+    console.log(this.mapContainer.current.clientHeight);
+    console.log(this.mapContainer.current.refs);
+
+    this.setState({
       viewport: {
         ...this.state.viewport,
         width: this.props.width || window.innerWidth,
         height: this.props.height || window.innerHeight - 400
       }
-    });*/
+    });
   };
 
 
@@ -257,7 +261,7 @@ class Dashboard extends React.Component {
             <div className={classes.appBarSpacer} />
             <Typography component="div" className={classes.chartContainer}>
 
-            <Paper>
+            <Paper ref={this.mapContainer}>
               <MapGL
                 {...viewport}
                 ref={this.mapRef}

@@ -6,7 +6,7 @@
     },
     "sources": {
         "mapbox": {
-            "url": "mapbox://mapbox.mapbox-streets-v7",
+            "url": "mapbox://mapbox.mapbox-streets-v8",
             "type": "vector"
         }
     },

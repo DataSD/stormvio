@@ -52,6 +52,10 @@ const geocoderApiOptions = {
     bbox: [-117.321899, 32.507488, -116.798203, 33.114231]
   }
 
+const mapViewOptions = {
+  transitionDuration: 500
+}
+
 
 
 const styles = theme => ({
@@ -264,7 +268,7 @@ class Dashboard extends React.Component {
           longitude: cluster.geometry.coordinates[0],
           latitude: cluster.geometry.coordinates[1],
           zoom: zoom,
-          transitionDuration:1000,
+          transitionDuration: mapViewOptions.transitionDuration,
           transitionInterpolator: new FlyToInterpolator()
         }
       });
@@ -292,7 +296,7 @@ class Dashboard extends React.Component {
         longitude: result.center[0],
         latitude: result.center[1],
         zoom: 17,
-        transitionDuration:1000,
+        transitionDuration: mapViewOptions.transitionDuration,
         transitionInterpolator: new FlyToInterpolator()
       }
     });
@@ -308,7 +312,7 @@ class Dashboard extends React.Component {
           longitude: position.coords.longitude,
           latitude: position.coords.latitude,
           zoom: 17,
-          transitionDuration:1000,
+          transitionDuration: mapViewOptions.transitionDuration,
           transitionInterpolator: new FlyToInterpolator()
         }
       });

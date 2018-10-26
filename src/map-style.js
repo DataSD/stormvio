@@ -42,11 +42,11 @@ export const clusterLayer = fromJS({
         "circle-radius": [
             "step",
             ["get", "point_count"],
+            10,
+            2,
             20,
-            100,
-            30,
-            750,
-            40
+            10,
+            30
         ]
     }
 });
@@ -71,7 +71,7 @@ export const unclusteredPointLayer = fromJS({
     source: "tsw_violations",
     filter: ["!", ["has", "point_count"]],
     paint: {
-        "circle-radius": 5,
+        "circle-radius": 7,
         //"circle-stroke-width": 1,
         //"circle-stroke-color": "#fff"
         'circle-color': [

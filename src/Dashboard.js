@@ -207,7 +207,7 @@ class Dashboard extends React.Component {
     let source = fromJS({
         type: 'geojson',
         cluster: true,
-        clusterMaxZoom: 14,
+        clusterMaxZoom: 20,
         clusterRadius: 50,
         data
     })
@@ -216,8 +216,9 @@ class Dashboard extends React.Component {
       .setIn(['sources', 'tsw_violations'], source)
       // Add point layer to map
       .set('layers', defaultMapStyle.get('layers').push(clusterLayer).push(unclusteredPointLayer).push(clusterCountLayer))
+      //.set('layers', defaultMapStyle.get('layers').push(unclusteredPointLayer))
 
-    console.log(mapStyle);
+    console.log(mapStyle.get('layers'));
 
     this.setState({mapData: data, mapStyle});
     this._getVisibleViolations();
@@ -236,6 +237,47 @@ class Dashboard extends React.Component {
     this._getVisibleViolations();
     this.setState({viewport});
   }
+
+  _onClick = event => {
+    let map = this.mapRef.current.getMap();
+    let reqViolations = map.queryRenderedFeatures([
+      event.srcEvent.offsetX,
+      event.srcEvent.offsetY
+    //], {layers: ['unclustered-point', 'clusters']});
+    ], {layers: ['clusters']});
+    console.log(reqViolations);
+
+    let cluster = reqViolations[0];
+    let clusterId = cluster.properties.cluster_id;
+
+    let source = map.getSource('tsw_violations')
+    source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+      if (err)
+        return;
+
+      console.log(clusterId);
+      console.log(zoom);
+
+      this.setState({
+        viewport: {
+          ...this.state.viewport,
+          longitude: cluster.geometry.coordinates[0],
+          latitude: cluster.geometry.coordinates[1],
+          zoom: zoom,
+          transitionDuration:1000,
+          transitionInterpolator: new FlyToInterpolator()
+        }
+      });
+    });
+
+
+
+
+    //const {features, srcEvent: {offsetX, offsetY}} = event;
+    //const hoveredFeature = features && features.find(f => f.layer.id === 'unclustered-point');
+
+    //this.setState({hoveredFeature, x: offsetX, y: offsetY});
+  };
 
   _goToGeocoderResult = (result) => {
     // Go to result.

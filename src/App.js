@@ -120,7 +120,7 @@ const styles = theme => ({
     height: '1vh'
   },
   topAppBarSpacer: {
-    height: '7vh'
+    height: '3vh'
   },
   content: {
     flexGrow: 1,
@@ -220,7 +220,6 @@ class App extends React.Component {
       .setIn(['sources', 'tsw_violations'], source)
       // Add point layer to map
       .set('layers', defaultMapStyle.get('layers').push(clusterLayer).push(unclusteredPointLayer).push(clusterCountLayer))
-      //.set('layers', defaultMapStyle.get('layers').push(unclusteredPointLayer))
 
     console.log(mapStyle.get('layers'));
 
@@ -394,7 +393,7 @@ class App extends React.Component {
               </Grid>
 
 
-              <Grid item xs={12} sm={3} md={2}>
+              <Grid item xs={3} sm={3} md={2}>
                 <Paper>
                 <div className={classes.locateButton} >
                   <IconButton onClick={this.locateUser}>
@@ -405,7 +404,7 @@ class App extends React.Component {
               </Grid>
 
 
-              <Grid item xs={12} sm={9} md={10}>
+              <Grid item xs={9} sm={9} md={10}>
                 <div className={classes.geocoderInput} >
                   <MatGeocoder
                     inputPlaceholder="Search Address"

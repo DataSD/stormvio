@@ -213,7 +213,7 @@ class App extends React.Component {
         type: 'geojson',
         cluster: true,
         clusterMaxZoom: 14,
-        clusterRadius: 50,
+        clusterRadius: 70,
         data
     })
     const mapStyle = defaultMapStyle

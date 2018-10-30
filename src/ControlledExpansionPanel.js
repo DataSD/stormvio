@@ -41,16 +41,15 @@ class ControlledExpansionPanels extends React.Component {
     const { expanded } = this.state;
     let listItems = <Typography className={classes.heading}>No Violations Visible</Typography>
 
-    console.log(mapData);
     if (mapData.length > 0) {
       listItems = mapData.map((violation) =>
           <ExpansionPanel key={violation.properties.UUID} expanded={expanded === violation.properties.UUID} onChange={this.handleChange(violation.properties.UUID)}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Grid item xs={12}>
-                <Typography className={classes.heading}>{ violation.properties.TYPE} </Typography>
+                <Typography className={classes.heading}>{ violation.properties.ADDRESS } </Typography>
               </Grid>
               <Grid item xs={12}>
-              <Typography className={classes.secondaryHeading}>{ violation.properties.STATUS }</Typography>
+              <Typography className={classes.secondaryHeading}>{ violation.properties.SRC }</Typography>
               </Grid>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>

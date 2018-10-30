@@ -385,6 +385,8 @@ class App extends React.Component {
             <Divider />
             <List>{mainListItems}</List>
           </Drawer>
+
+
           <main className={classes.content}>
             <Grid container spacing={24}>
               <Grid item xs={12}>

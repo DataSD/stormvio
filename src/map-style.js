@@ -77,9 +77,9 @@ export const unclusteredPointLayer = fromJS({
         'circle-color': [
           'match',
           ['get', 'SRC'],
-          'DSD_PTS', 'blue',
-          'TSW_SF', 'orange',
-          '#000000'
+          'DSD_PTS', '#00549f',
+          'TSW_SF', '#d47600',
+          '#009581'
         ]
     }
 });

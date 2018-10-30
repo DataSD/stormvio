@@ -232,7 +232,8 @@ class App extends React.Component {
     let bounds = map.getBounds()
     let p_bounds = [map.project(bounds['_sw']), map.project(bounds['_ne'])]
     // TODO -- slicing features down
-    let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['unclustered-point']}).slice(0, 10);
+    //let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['unclustered-point']}).slice(0, 10);
+    let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['unclustered-point']});
     this.setState({visibleViolations});
   }, 1000);
 

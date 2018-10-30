@@ -129,12 +129,12 @@ const styles = theme => ({
     overflow: 'auto',
   },
   tableContainer: {
-    height: '40vh',
+    height: '17vh',
     overflow: 'auto',
   },
   mapContainer: {
     width: '100%',
-    height: '35vh',
+    height: '58vh',
   },
   h5: {
     marginBottom: theme.spacing.unit * 2,
@@ -211,7 +211,7 @@ class App extends React.Component {
     let source = fromJS({
         type: 'geojson',
         cluster: true,
-        clusterMaxZoom: 15,
+        clusterMaxZoom: 13,
         clusterRadius: 50,
         data
     })
@@ -248,8 +248,6 @@ class App extends React.Component {
       if (err)
         return;
 
-      console.log(clusterId);
-      console.log(zoom);
 
       this.setState({
         viewport: {

@@ -39,7 +39,7 @@ class ControlledExpansionPanels extends React.Component {
     const classes = this.props.classes;
     let mapData = (this.props.mapData === null ? [] : this.props.mapData);
     const { expanded } = this.state;
-    let listItems = <Typography className={classes.heading}>No Violations Visible</Typography>
+    let listItems = <Typography className={classes.heading}>Zoom In to See Unclustered Violations</Typography>
 
     if (mapData.length > 0) {
       listItems = mapData.map((violation) =>

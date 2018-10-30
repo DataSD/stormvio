@@ -84,4 +84,5 @@ export const unclusteredPointLayer = fromJS({
     }
 });
 
+
 export const defaultMapStyle = fromJS(MAP_STYLE);

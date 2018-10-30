@@ -8,6 +8,15 @@
         "mapbox": {
             "url": "mapbox://mapbox.mapbox-streets-v8",
             "type": "vector"
+        },
+        "satellite": {
+          "type": "raster",
+          "url": "mapbox://mapbox.satellite",
+          "tileSize": 256
+        },
+        "Mapbox Terrain V2": {
+          "type": "vector",
+          "url": "mapbox://mapbox.mapbox-terrain-v2"
         }
     },
     "sprite": "mapbox://sprites/mapbox/basic-v8",

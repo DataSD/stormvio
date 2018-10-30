@@ -154,7 +154,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: true,
+      open: false,
       mapStyle: defaultMapStyle,
       mapData: null,
       visibleViolations: null,
@@ -207,6 +207,7 @@ class App extends React.Component {
 
     //updatePercentiles(data, f => f.properties.income[this.state.year]);
 
+    console.log(data);
     let source = fromJS({
         type: 'geojson',
         cluster: true,
@@ -241,19 +242,8 @@ class App extends React.Component {
     this.setState({viewport});
   }
 
-  _onClick = event => {
-    let map = this.mapRef.current.getMap();
-    let reqViolations = map.queryRenderedFeatures([
-      event.srcEvent.offsetX,
-      event.srcEvent.offsetY
-    //], {layers: ['unclustered-point', 'clusters']});
-    ], {layers: ['clusters']});
-    console.log(reqViolations);
-
-    let cluster = reqViolations[0];
+  _handleClusterClick = (cluster, source) => {
     let clusterId = cluster.properties.cluster_id;
-
-    let source = map.getSource('tsw_violations')
     source.getClusterExpansionZoom(clusterId, (err, zoom) => {
       if (err)
         return;
@@ -273,8 +263,24 @@ class App extends React.Component {
       });
     });
 
+  }
 
+  _onClick = event => {
+    let map = this.mapRef.current.getMap();
+    let reqViolations = map.queryRenderedFeatures([
+      event.srcEvent.offsetX,
+      event.srcEvent.offsetY
+    //], {layers: ['unclustered-point', 'clusters']});
+    ], {layers: ['clusters', 'unclustered-point']});
+    console.log(reqViolations);
 
+    let primFeature = reqViolations[0];
+    if (primFeature.layer.id === 'clusters') {
+      this._handleClusterClick(primFeature, map.getSource('tsw_violations'));
+    }
+    else {
+      console.log(primFeature);
+    }
 
     //const {features, srcEvent: {offsetX, offsetY}} = event;
     //const hoveredFeature = features && features.find(f => f.layer.id === 'unclustered-point');
@@ -367,7 +373,7 @@ class App extends React.Component {
             </Toolbar>
           </AppBar>
           <Drawer
-            variant="permanent"
+            variant="temporary"
             classes={{
               paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
             }}
@@ -391,7 +397,7 @@ class App extends React.Component {
               <Grid item xs={12} sm={3} md={2}>
                 <Paper>
                 <div className={classes.locateButton} >
-                  <IconButton onClick={this.handleDrawerClose}>
+                  <IconButton onClick={this.locateUser}>
                     <GpsFixed onClick={this.locateUser}/>
                   </IconButton>
                 </div>
@@ -409,10 +415,6 @@ class App extends React.Component {
                     {...geocoderApiOptions}
                   />
                 </div>
-              </Grid>
-
-              <Grid item xs={12}>
-                <div className={classes.appBarSpacer} />
               </Grid>
 
 
@@ -437,7 +439,6 @@ class App extends React.Component {
 
 
 
-              <Grid item xs={12}> <div className={classes.appBarSpacer} /></Grid>
               <Grid item xs={12}>
                 <Paper>
                   <div className={classes.tableContainer}>

@@ -6,6 +6,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   root: {
@@ -33,23 +34,87 @@ class ControlledExpansionPanels extends React.Component {
     });
   };
 
+
   render() {
     const classes = this.props.classes;
     let mapData = (this.props.mapData === null ? [] : this.props.mapData);
     const { expanded } = this.state;
     let listItems = <Typography className={classes.heading}>No Violations Visible</Typography>
 
+    console.log(mapData);
     if (mapData.length > 0) {
       listItems = mapData.map((violation) =>
           <ExpansionPanel key={violation.properties.UUID} expanded={expanded === violation.properties.UUID} onChange={this.handleChange(violation.properties.UUID)}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>{ violation.properties.TYPE} </Typography>
+              <Grid item xs={12}>
+                <Typography className={classes.heading}>{ violation.properties.TYPE} </Typography>
+              </Grid>
+              <Grid item xs={12}>
               <Typography className={classes.secondaryHeading}>{ violation.properties.STATUS }</Typography>
+              </Grid>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>
-                { violation.properties.PARCEL_APN }
-              </Typography>
+            <Grid container spacing={24}>
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>APN</Typography>
+                <Typography>{ violation.properties.PARCEL_APN}</Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>Address</Typography>
+                <Typography>{ violation.properties.ADDRESS } </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>SRC</Typography>
+                <Typography>{ violation.properties.SRC} </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>STATUS</Typography>
+                <Typography>{ violation.properties.STATUS} </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>TYPE</Typography>
+                <Typography>{ violation.properties.TYPE}</Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>UUID</Typography>
+                <Typography>{ violation.properties.UUID} </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>VIOLATOR</Typography>
+                <Typography>{ violation.properties.VIOLATOR} </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>ISSUE_DATE</Typography>
+                <Typography>{ violation.properties.ISSUE_DATE} </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>COMPLY_BY</Typography>
+                <Typography>{ violation.properties.COMPLY_BY} </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>ADDITIONAL_1</Typography>
+                <Typography>{ violation.properties.ADDITIONAL_1} </Typography>
+              </Grid>
+
+
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.secondaryHeading}>ADDITIONAL_2</Typography>
+                <Typography>{ violation.properties.ADDITIONAL_2} </Typography>
+              </Grid>
+
+
+
+            </Grid>
+
             </ExpansionPanelDetails>
           </ExpansionPanel>
       );

@@ -212,7 +212,7 @@ class App extends React.Component {
     let source = fromJS({
         type: 'geojson',
         cluster: true,
-        clusterMaxZoom: 13,
+        clusterMaxZoom: 14,
         clusterRadius: 50,
         data
     })

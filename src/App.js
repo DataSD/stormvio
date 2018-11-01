@@ -194,8 +194,6 @@ class App extends React.Component {
     this.setState({
       viewport: {
         ...this.state.viewport,
-        //width: this.props.width || window.innerWidth - 300,
-        //height: this.props.height || window.innerHeight,
         width: this.mapContainer.current.clientWidth,
         height: this.mapContainer.current.clientHeight
       }
@@ -206,7 +204,6 @@ class App extends React.Component {
 
   _loadData = data => {
 
-    //updatePercentiles(data, f => f.properties.income[this.state.year]);
 
     console.log(data);
     let source = fromJS({
@@ -233,7 +230,6 @@ class App extends React.Component {
     let bounds = map.getBounds()
     let p_bounds = [map.project(bounds['_sw']), map.project(bounds['_ne'])]
     // TODO -- slicing features down
-    //let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['unclustered-point']}).slice(0, 10);
     let visibleViolations = this.mapRef.current.queryRenderedFeatures(p_bounds, {layers: ['unclustered-point']});
     this.setState({visibleViolations});
   }, 1000);
@@ -281,10 +277,6 @@ class App extends React.Component {
       console.log(primFeature);
     }
 
-    //const {features, srcEvent: {offsetX, offsetY}} = event;
-    //const hoveredFeature = features && features.find(f => f.layer.id === 'unclustered-point');
-
-    //this.setState({hoveredFeature, x: offsetX, y: offsetY});
   };
 
   _goToGeocoderResult = (result) => {
@@ -307,7 +299,6 @@ class App extends React.Component {
   }
 
   locateUser = () => {
-    // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
     navigator.geolocation.getCurrentPosition(position => {
 
       this.setState({

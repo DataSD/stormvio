@@ -90,23 +90,23 @@ class ControlledExpansionPanels extends React.Component {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Typography className={classes.secondaryHeading}>ISSUE_DATE</Typography>
+                <Typography className={classes.secondaryHeading}>VIOLATION ISSUE DATE</Typography>
                 <Typography>{ violation.properties.ISSUE_DATE} </Typography>
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Typography className={classes.secondaryHeading}>COMPLY_BY</Typography>
+                <Typography className={classes.secondaryHeading}>COMPLY BY</Typography>
                 <Typography>{ violation.properties.COMPLY_BY} </Typography>
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Typography className={classes.secondaryHeading}>ADDITIONAL_1</Typography>
+                <Typography className={classes.secondaryHeading}>COMMENT 1</Typography>
                 <Typography>{ violation.properties.ADDITIONAL_1} </Typography>
               </Grid>
 
 
               <Grid item xs={12} sm={6}>
-                <Typography className={classes.secondaryHeading}>ADDITIONAL_2</Typography>
+                <Typography className={classes.secondaryHeading}>COMMENT 2</Typography>
                 <Typography>{ violation.properties.ADDITIONAL_2} </Typography>
               </Grid>
 

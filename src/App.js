@@ -19,6 +19,7 @@ import ControlledExpansionPanel from './ControlledExpansionPanel';
 import Paper from '@material-ui/core/Paper';
 import {fromJS} from 'immutable';
 import {json as requestJson} from 'd3-request';
+import KeenTracking from 'keen-tracking'
 
 import './App.css';
 
@@ -151,6 +152,12 @@ const styles = theme => ({
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoicXVhbmRhcnkiLCJhIjoiY2pndmVrcHU5MHJ4cTJxcDgwcjJubnBucyJ9.wRn-2fAYIED8VQDqo0M1CQ';
 
+const keenClient = new KeenTracking({
+  projectId: '5be3391cc9e77c0001a1239f',
+  writeKey: '492623F1791156D6AB266BC89B52F720B8C93C529D31F508E27352933EC5AFFF80E2010C9B9FFDC1B901032AF92102C355FF951FAE399008ADC3A104CAAD819DF7869A3BC216BBFCF1CD4D3EB16D6D654FB2145967F6B0C6FE0E0FA1C14B0BE7'
+});
+
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -178,6 +185,31 @@ class App extends React.Component {
   componentDidMount() {
     window.addEventListener('resize', this._resize);
     this._resize();
+    keenClient.initAutoTracking({
+      // record on page load
+      recordPageViews: true,
+      // OR
+      // record on leaving the page - this ways you will get the time spent on this page
+      recordPageViewsOnExit: true,
+
+      recordScrollState: true, // see how far people scrolled
+
+      recordClicks: true, // record clicks on A links
+
+      // FORMS
+      recordFormSubmits: true,
+      ignoreDisabledFormFields: false,
+      ignoreFormFieldTypes: ['password'],
+
+      // GDPR related options
+      collectIpAddress: true, // default
+      collectUuid: true, // default
+
+      // share UUID cookies across subdomains
+      shareUuidAcrossDomains: false // default
+
+      // catchError: myCustomErrorHandler
+    });
     requestJson('data/tsw_violations_merged.geojson', (error, response) => {
       if (!error) {
         this._loadData(response);
@@ -189,6 +221,7 @@ class App extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this._resize);
   }
+
 
   _resize = debounce(() => {
     this.setState({
@@ -205,7 +238,6 @@ class App extends React.Component {
   _loadData = data => {
 
 
-    console.log(data);
     let source = fromJS({
         type: 'geojson',
         cluster: true,

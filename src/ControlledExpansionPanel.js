@@ -49,7 +49,7 @@ class ControlledExpansionPanels extends React.Component {
                 <Typography className={classes.heading}>{ violation.properties.ADDRESS } </Typography>
               </Grid>
               <Grid item xs={12}>
-              <Typography className={classes.secondaryHeading}>{ violation.properties.SRC }</Typography>
+              <Typography className={classes.secondaryHeading}>{ violation.properties.ISSUE_DATE }</Typography>
               </Grid>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>

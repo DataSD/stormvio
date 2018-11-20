@@ -119,24 +119,25 @@ const styles = theme => ({
     },
   },
   appBarSpacer: {
-    height: '1vh'
+    height: '0.5vh'
   },
   topAppBarSpacer: {
-    height: '3vh'
+    height: '4vh'
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    //padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit,
     height: '100vh',
     overflow: 'auto',
   },
   tableContainer: {
-    height: '17vh',
+    height: '30vh',
     overflow: 'auto',
   },
   mapContainer: {
     width: '100%',
-    height: '58vh',
+    height: '40vh',
   },
   h5: {
     marginBottom: theme.spacing.unit * 2,

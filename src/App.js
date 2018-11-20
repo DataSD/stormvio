@@ -210,7 +210,7 @@ class App extends React.Component {
 
       // catchError: myCustomErrorHandler
     });
-    requestJson('data/tsw_violations_merged.geojson', (error, response) => {
+    requestJson('https://s3.amazonaws.com/seshat.datasd.org/tsw_int/stormwater_violations_merged.geojson', (error, response) => {
       if (!error) {
         this._loadData(response);
       }
